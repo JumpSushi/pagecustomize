@@ -12,7 +12,7 @@ Website Customizer is an extension for chromium browsers that allows you to cust
 - Save settings for individual websites
 - Reset all changes
 
-## Installation
+## Installationsensation
 
 1. Dowload Here: https://github.com/JumpSushi/pagecustomize/releases/tag/V1.0.0
 2. Open Chrome (or your chromium based browser) and navigate to `chrome://extensions/`.
