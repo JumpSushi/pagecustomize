@@ -32,6 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (result.websites && result.websites[currentUrl]) {
       const settings = result.websites[currentUrl];
       
+      if (settings.customCSS && settings.enableCustomCSS) {
+        // Apply custom CSS
+        const style = document.createElement('style');
+        style.textContent = settings.customCSS;
+        document.head.appendChild(style);
+      }
+      
       const pageElements = document.getElementsByTagName('*');
       for (let el of pageElements) {
         if (settings.fontFamily) el.style.fontFamily = settings.fontFamily;

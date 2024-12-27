@@ -140,7 +140,7 @@ button {
   background-color: #e9ecef;
   border-radius: 3px;
   font-family: monospace;
-  font-size: 11px;
+  font-size: 11px; 
 }
 
 #errorMessage {
@@ -188,4 +188,49 @@ button {
   color: #28a745;
   margin-top: 4px;
   display: none;
+}
+
+#customCSSWrapper {
+  margin-top: 8px;
+  transition: all 0.3s ease;
+}
+
+#customCSS {
+  width: 100%;
+  min-height: 80px;
+  padding: 8px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 12px;
+  resize: vertical;
+}
+
+.hidden {
+  display: none;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#enableCustomCSS {
+  cursor: pointer;
+  margin: 0; 
+}
+
+.checkbox-wrapper label {
+  display: flex;
+  align-items: center;
+  margin: 0; 
+  line-height: 1; 
+}
+
+#removalNote {
+  font-size: 11px;
+  color: #6c757d;
+  margin-top: 4px;
+  font-style: italic;
 }

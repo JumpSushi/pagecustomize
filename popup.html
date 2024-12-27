@@ -57,6 +57,17 @@
       <div id="removalInstructions">
         Press <span class="shortcut">ESC</span> key to stop element removal mode
       </div>
+      <div id="removalNote">Note: Removed elements will not persist after page reload</div>
+    </div>
+
+    <div class="control-group">
+      <div class="checkbox-wrapper">
+        <input type="checkbox" id="enableCustomCSS">
+        <label for="enableCustomCSS">Add custom CSS</label>
+      </div>
+      <div id="customCSSWrapper" class="hidden">
+        <textarea id="customCSS" rows="4" placeholder="Enter custom CSS here..."></textarea>
+      </div>
     </div>
 
     <div class="control-group">
@@ -66,7 +77,6 @@
       </div>
       <div id="savedStatus"></div>
     </div>
-
     <button id="reset">Reset All Changes</button>
   </div>
 
