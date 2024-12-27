@@ -53,3 +53,5 @@ The extension requires the following permissions:
 
 Contributions are welcome! Please open an issue or submit a pull request with your changes. Many Thanks.
 
+Github Copilot was used for debgging (including some small snippets of code), and some portions of this readme.
+
