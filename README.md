@@ -47,3 +47,5 @@ Contributions are welcome! Please open an issue or submit a pull request with yo
 
 Merry Chrishwash.
 
+Github Copilot was used for debgging (including some small snippets of code), and some portions of this readme.
+
