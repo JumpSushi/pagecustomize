@@ -11,6 +11,7 @@ Website Customizer is an extension for chromium browsers that allows you to cust
 - Remove elements from the page
 - Save settings for individual websites
 - Reset all changes
+- CUSTOM CSS IS HERE WOWOOWOWOWOOWOWOWOWOWOWOWOWOOWOW
 
 ## Installationsensation
 
