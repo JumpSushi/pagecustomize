@@ -28,8 +28,8 @@ Website Customizer is an extension for chromium browsers that allows you to cust
     - **Font Size**: Adjust the slider to change the font size.
     - **Text Color**: Choose a color using the color picker.
     - **Text Capitalization**: Select a capitalization option from the dropdown.
-    - **Custom CSS**: Add your custom CSS in the provided textarea.
-3. To remove elements from the page, click the "Enable Element Removal" button. Click on any element on the page to remove it. Press the `ESC` key to exit removal mode, or press the button in the extension menu. *Note: the css textbox is not an editor, it does not provide error messages if your indentation, syntax etc are wrong. It is recommeneded you use an editor before copy pasting into the field*
+    - **Custom CSS**: Add your custom CSS in the provided textarea. **Note: the css textbox is not an editor, it does not provide error messages if your indentation, syntax etc are wrong. It is recommeneded you use an editor before copy pasting into the field**
+3. To remove elements from the page, click the "Enable Element Removal" button. Click on any element on the page to remove it. Press the `ESC` key to exit removal mode, or press the button in the extension menu. 
 4. Click "Save for this website" to save your customizations for the current website.
 5. Click "Delete saved settings" to remove the saved customizations for the current website.
 6. Click "Reset All Changes" to revert all customizations and reload the page.
