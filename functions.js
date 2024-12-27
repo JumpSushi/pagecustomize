@@ -21,6 +21,11 @@ function toggleRemovalMode(enabled) {
 function handleEscapeKey(e) {
   if (e.key === 'Escape') {
     toggleRemovalMode(false);
+    chrome.storage.local.set({ removalMode: false });
+    chrome.runtime.sendMessage({
+      action: 'removalModeChanged',
+      value: false
+    });
   }
 }
 
@@ -43,32 +48,44 @@ function removeElement(e) {
   if (!window.removalMode) return;
   e.preventDefault();
   e.stopPropagation();
+  
   if (e.target !== document.body && e.target !== document.documentElement) {
-    const selector = getSelector(e.target);
+    const selector = getUniqueSelector(e.target);
     window.removedElements.add(selector);
     e.target.remove();
-    
-    chrome.storage.local.get(['websites'], function(result) {
-      const websites = result.websites || {};
-      const settings = websites[window.location.hostname] || {};
-      settings.removedElements = Array.from(window.removedElements);
-      websites[window.location.hostname] = settings;
-      chrome.storage.local.set({ websites });
-    });
   }
 }
 
-function getSelector(element) {
-  if (element.id) return '#' + element.id;
-  if (element.className) return '.' + Array.from(element.classList).join('.');
-  let path = element.tagName.toLowerCase();
-  let parent = element.parentNode;
-  while (parent && parent !== document.body) {
-    let index = Array.from(parent.children).indexOf(element) + 1;
-    path = `${parent.tagName.toLowerCase()} > ${path}:nth-child(${index})`;
-    parent = parent.parentNode;
+function loadSavedRemovedElements() {
+  const hostname = window.location.hostname;
+  chrome.storage.local.get(['websites'], function(result) {
+    if (result.websites && result.websites[hostname]) {
+      const settings = result.websites[hostname];
+      if (settings.removedElements && Array.isArray(settings.removedElements)) {
+        window.removedElements = new Set(settings.removedElements);
+        settings.removedElements.forEach(selector => {
+          try {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(el => el.remove());
+          } catch (err) {
+            console.error('Error removing element:', err);
+          }
+        });
+      }
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded', loadSavedRemovedElements);
+
+function getUniqueSelector(element) {
+  if (element.id) return `#${element.id}`;
+  const path = [];
+  while (element.parentElement) {
+    const index = Array.from(element.parentElement.children).indexOf(element) + 1;
+    path.unshift(`${element.tagName}:nth-child(${index})`);
+    element = element.parentElement;
   }
-  return path;
+  return path.join(' > ');
 }
 
 function resetPage() {
@@ -78,3 +95,10 @@ function resetPage() {
   }
   location.reload();
 }
+
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.action === 'getRemoved') {
+    sendResponse({ removedElements: Array.from(window.removedElements) });
+  }
+  return true;
+});
