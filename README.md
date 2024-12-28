@@ -49,7 +49,8 @@ The extension requires the following permissions:
 - New CSS feature added
 - Fixed color bug where saving made all text black even without user changes
 - Added a small note for the remove element feature
-  *version 1.1.0 has yet to be added to releases, if you want to experience the css now, clone the repo*
+
+*version 1.1.0 has yet to be added to releases, if you want to experience the css now, clone the repo*
 
 ## Contributing
 
