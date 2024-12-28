@@ -16,7 +16,7 @@ Website Customizer is an extension for chromium browsers that allows you to cust
 
 ## Installationsensation
 
-1. Download Here: https://github.com/JumpSushi/pagecustomize/releases/tag/V1.0.0
+1. Download Here: https://github.com/JumpSushi/pagecustomize/releases/tag/V1.1.0
 2. Open Chrome (or your chromium based browser) and navigate to `chrome://extensions/`.
 3. Enable "Developer mode" by toggling the switch in the top right corner.
 4. Click on "Load unpacked" and select the directory where you cloned the repository.
