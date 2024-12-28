@@ -15,6 +15,7 @@
     <div class="control-group">
       <label for="fontFamily">Font Family</label>
       <select id="fontFamily">
+        <option value="">Website Default</option>
         <option value="Arial">Arial</option>
         <option value="Times New Roman">Times New Roman</option>
         <option value="Georgia">Georgia</option>
@@ -44,7 +45,7 @@
     <div class="control-group">
       <label for="textTransform">Text Capitalization</label>
       <select id="textTransform">
-        <option value="none">None</option>
+        <option value="">Website Default</option>
         <option value="uppercase">Uppercase</option>
         <option value="lowercase">Lowercase</option>
         <option value="capitalize">Capitalize</option>
@@ -72,12 +73,12 @@
 
     <div class="control-group">
       <div class="save-controls">
-        <button id="saveSettings">Save for this website</button>
-        <button id="deleteSettings">Delete saved settings</button>
+        <button id="saveSettings">Save Settings</button>
+        <button id="deleteSettings">Delete Settings</button>
       </div>
       <div id="savedStatus"></div>
     </div>
-    <button id="reset">Reset All Changes</button>
+    <button id="importExportSettings">Import/Export Settings</button>
   </div>
 
   <script src="popup.js"></script>

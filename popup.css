@@ -14,7 +14,7 @@ body {
 .header {
   margin-bottom: 20px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid aliceblue;
 }
 
 .header h1 {
@@ -233,4 +233,20 @@ button {
   color: #6c757d;
   margin-top: 4px;
   font-style: italic;
+}
+
+#websiteSelect {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #495057;
+  background-color: white;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+#websiteSelect option {
+  padding: 8px;
 }

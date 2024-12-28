@@ -1,0 +1,4 @@
+fix custom css after import not shown on page
+background color change including some padding
+website default not displaying website default! (stupid fix, save tempsettings and relaod page lmao)
+

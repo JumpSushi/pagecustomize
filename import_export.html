@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="import_export.css">
+</head>
+<body>
+  <div class="header">
+    <h1>Import/Export Settings</h1>
+    <p>Backup and restore your website customizations</p>
+  </div>
+
+  <div class="control-group">
+    <label for="websiteSelect">Select Website</label>
+    <select id="websiteSelect">
+      <option value="all">All Websites</option>
+    </select>
+    <button id="exportButton" class="primary-button">Export Settings</button>
+  </div>
+
+  <div class="control-group">
+    <label>Import Settings</label>
+    <div class="file-input-wrapper">
+      <input type="file" id="importFile" accept=".json">
+    </div>
+    <button id="importButton" class="secondary-button">Import Settings</button>
+  </div>
+
+  <script src="import_export.js"></script>
+</body>
+</html>

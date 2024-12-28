@@ -1,3 +1,35 @@
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === 'complete') {
+    chrome.storage.local.get(['tempSettings'], async function(result) {
+      if (result.tempSettings) {
+        const temp = result.tempSettings;
+        
+        // apply temp settings at page relaod immediatley otherwise they load on popup click for some reason
+        await chrome.scripting.executeScript({
+          target: { tabId: tabId },
+          function: (settings) => {
+            const all = document.getElementsByTagName('*');
+            for (let el of all) {
+              if (settings.fontSize && settings.fontSize !== "16") {
+                el.style.fontSize = settings.fontSize + 'px';
+              }
+              if (settings.textColor && settings.textColor !== "#000000") {
+                el.style.color = settings.textColor;
+              }
+              if (settings.textTransform) {
+                el.style.textTransform = settings.textTransform;
+              }
+            }
+          },
+          args: [temp]
+        });
+
+        chrome.storage.local.remove(['tempSettings']);
+      }
+    });
+  }
+});
+
 document.addEventListener('DOMContentLoaded', async function() {
   const controls = document.getElementById('controls');
 
@@ -35,13 +67,21 @@ document.addEventListener('DOMContentLoaded', async function() {
       customCSSWrapper: document.getElementById('customCSSWrapper')
     };
 
-    if (result.fontFamily) elements.fontFamily.value = result.fontFamily;
+    if (result.fontFamily) {
+      elements.fontFamily.value = result.fontFamily;
+    } else {
+      elements.fontFamily.value = ""; // Empty string -> "Website Default" option
+    }
     if (result.fontSize) {
       elements.fontSize.value = result.fontSize;
       elements.fontSizeValue.textContent = result.fontSize + 'px';
     }
     if (result.textColor) elements.textColor.value = result.textColor;
-    if (result.textTransform) elements.textTransform.value = result.textTransform;
+    if (result.textTransform) {
+      elements.textTransform.value = result.textTransform;
+    } else {
+      elements.textTransform.value = ""; // Empty string -> "Website Default" option
+    }
     if (result.enableCustomCSS) {
       elements.enableCustomCSS.checked = true;
       elements.customCSSWrapper.classList.remove('hidden');
@@ -65,28 +105,63 @@ document.addEventListener('DOMContentLoaded', async function() {
     chrome.storage.local.get(['websites'], function(result) {
       if (result.websites && result.websites[currentUrl]) {
         const settings = result.websites[currentUrl];
-        elements.fontFamily.value = settings.fontFamily || "";
+        elements.fontFamily.value = settings.fontFamily || "";  // Empty string = Website Default
         elements.fontSize.value = settings.fontSize || "16";
         elements.fontSizeValue.textContent = (settings.fontSize || "16") + "px";
         elements.textColor.value = settings.textColor || "#000000";
-        elements.textTransform.value = settings.textTransform || "none";
+        elements.textTransform.value = settings.textTransform || "";  // Empty string = Website Default
 
-        if (settings.fontFamily) injectCSS(tab.id, `* { font-family: ${settings.fontFamily} !important; }`);
-        if (settings.fontSize) injectCSS(tab.id, `* { font-size: ${settings.fontSize}px !important; }`);
-        if (settings.textColor) injectCSS(tab.id, `* { color: ${settings.textColor} !important; }`);
-        if (settings.textTransform) injectCSS(tab.id, `* { text-transform: ${settings.textTransform} !important; }`);
-        if (settings.customCSS && elements.enableCustomCSS.checked) injectCSS(tab.id, settings.customCSS);
+        if (settings.fontFamily && settings.fontFamily !== "") {
+          injectCSS(tab.id, `* { font-family: ${settings.fontFamily} !important; }`);
+        }
+        if (settings.fontSize && settings.fontSize !== "16") {
+          injectCSS(tab.id, `* { font-size: ${settings.fontSize}px !important; }`);
+        }
+        if (settings.textColor && settings.textColor !== "#000000") {
+          injectCSS(tab.id, `* { color: ${settings.textColor} !important; }`);
+        }
+        if (settings.textTransform && settings.textTransform !== "") {
+          injectCSS(tab.id, `* { text-transform: ${settings.textTransform} !important; }`);
+        }
       }
     });
 
     elements.fontFamily.addEventListener('change', async (e) => {
       try {
         const fontFamily = e.target.value;
-        await chrome.storage.local.set({ fontFamily });
-        await injectCSS(tab.id, `* { font-family: ${fontFamily} !important; }`);
-        const defaultOption = elements.fontFamily.querySelector('option[value=""]');
-        if (defaultOption) {
-          defaultOption.remove();
+        
+        const tempSettings = {
+          fontSize: elements.fontSize.value,
+          textColor: elements.textColor.value,
+          textTransform: elements.textTransform.value,
+          customCSS: elements.customCSS.value,
+          enableCustomCSS: elements.enableCustomCSS.checked
+        };
+
+        if (fontFamily === "") {
+
+          await chrome.storage.local.set({ tempSettings });
+          
+          await chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            function: () => {
+              const all = document.getElementsByTagName('*');
+              for (let el of all) {
+                el.style.removeProperty('font-family');
+              }
+            }
+          });
+          
+          const result = await chrome.storage.local.get(['websites']);
+          const websites = result.websites || {};
+          if (!websites[currentUrl]) websites[currentUrl] = {};
+          websites[currentUrl].fontFamily = "";
+          await chrome.storage.local.set({ websites });
+
+          // reload page to reset website default with temp settings
+          chrome.tabs.reload(tab.id);
+        } else {
+          await injectCSS(tab.id, `* { font-family: ${fontFamily} !important; }`);
         }
       } catch (error) {
         showError(error.message);
@@ -117,8 +192,38 @@ document.addEventListener('DOMContentLoaded', async function() {
     elements.textTransform.addEventListener('change', async (e) => {
       try {
         const textTransform = e.target.value;
-        await chrome.storage.local.set({ textTransform });
-        await injectCSS(tab.id, `* { text-transform: ${textTransform} !important; }`);
+        
+        if (textTransform === "") {
+          const tempSettings = {
+            fontFamily: elements.fontFamily.value,
+            fontSize: elements.fontSize.value,
+            textColor: elements.textColor.value,
+            customCSS: elements.customCSS.value,
+            enableCustomCSS: elements.enableCustomCSS.checked
+          };
+          
+          await chrome.storage.local.set({ tempSettings });
+          
+          await chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            function: () => {
+              const all = document.getElementsByTagName('*');
+              for (let el of all) {
+                el.style.removeProperty('text-transform');
+              }
+            }
+          });
+          
+          const result = await chrome.storage.local.get(['websites']);
+          const websites = result.websites || {};
+          if (websites[currentUrl]) {
+            delete websites[currentUrl].textTransform;
+            await chrome.storage.local.set({ websites });
+          }
+          chrome.tabs.reload(tab.id);
+        } else {
+          await injectCSS(tab.id, `* { text-transform: ${textTransform} !important; }`);
+        }
       } catch (error) {
         showError(error.message);
       }
@@ -155,26 +260,23 @@ document.addEventListener('DOMContentLoaded', async function() {
         const enableCustomCSS = elements.enableCustomCSS.checked;
 
         const settings = {
-          fontFamily: elements.fontFamily.value,
+          fontFamily: elements.fontFamily.value || "",
           fontSize: elements.fontSize.value !== "16" ? elements.fontSize.value : "",
-          textColor: elements.textColor.value !== "#000000" ? elements.textColor.value : "",
-          textTransform: elements.textTransform.value,
+          textTransform: elements.textTransform.value || "",
           removedElements: response.removedElements || [],
           customCSS: enableCustomCSS ? customCSS : "",
           enableCustomCSS: enableCustomCSS
         };
 
-        // Save website specific settings
+        if (elements.textColor.value !== "#000000") {
+          settings.textColor = elements.textColor.value;
+        }
+
+
         const result = await chrome.storage.local.get(['websites']);
         const websites = result.websites || {};
         websites[currentUrl] = settings;
         await chrome.storage.local.set({ websites });
-
-        // Save global settings
-        await chrome.storage.local.set({ 
-          customCSS,
-          enableCustomCSS
-        });
 
         elements.savedStatus.textContent = 'Settings saved for this website';
         elements.savedStatus.style.display = 'block';
@@ -195,11 +297,14 @@ document.addEventListener('DOMContentLoaded', async function() {
           await chrome.storage.local.set({ websites: result.websites });
         }
 
-        elements.fontFamily.value = "";
+        elements.fontFamily.value = ""; 
         elements.fontSize.value = "16";
         elements.fontSizeValue.textContent = "16px";
         elements.textColor.value = "#000000";
-        elements.textTransform.value = "none";
+        elements.textTransform.value = "";  
+        elements.customCSS.value = "";
+        elements.enableCustomCSS.checked = false;
+        elements.customCSSWrapper.classList.add('hidden');
 
         elements.savedStatus.textContent = 'Settings deleted for this website';
         elements.savedStatus.style.display = 'block';
@@ -255,40 +360,6 @@ document.addEventListener('DOMContentLoaded', async function() {
       }
     });
 
-    elements.reset.addEventListener('click', async () => {
-      try {
-        elements.fontFamily.value = "";
-        elements.fontSize.value = "16";
-        elements.fontSizeValue.textContent = "16px";
-        elements.textColor.value = "#000000";
-        elements.textTransform.value = "none";
-
-        await chrome.storage.local.clear();
-
-        const resetPromise = new Promise((resolve, reject) => {
-          chrome.tabs.sendMessage(tab.id, {
-            action: 'resetPage'
-          }, (response) => {
-            if (chrome.runtime.lastError) {
-              reject(chrome.runtime.lastError);
-            } else {
-              resolve(response);
-            }
-          });
-        });
-
-        const timeoutPromise = new Promise((_, reject) => {
-          setTimeout(() => reject(new Error('Reset timed out')), 5000);
-        });
-
-        await Promise.race([resetPromise, timeoutPromise]);
-        await chrome.tabs.reload(tab.id);
-      } catch (error) {
-        showError(error.message);
-      }
-    });
-
-    // Load saved state
     chrome.storage.local.get(['enableCustomCSS', 'customCSS'], function(result) {
       if (result.enableCustomCSS) {
         elements.enableCustomCSS.checked = true;
@@ -299,11 +370,64 @@ document.addEventListener('DOMContentLoaded', async function() {
       }
     });
 
+    const importExportSettingsButton = document.getElementById('importExportSettings');
+    if (importExportSettingsButton) {
+      importExportSettingsButton.addEventListener('click', () => {
+        chrome.tabs.create({ url: chrome.runtime.getURL('import_export.html') });
+      });
+    }
+
+    await populateWebsiteSelect(currentUrl);
+
+    chrome.storage.local.get(['tempSettings'], function(result) {
+      if (result.tempSettings) {
+        const temp = result.tempSettings;
+        
+        if (temp.fontSize !== "16") {
+          elements.fontSize.value = temp.fontSize;
+          elements.fontSizeValue.textContent = temp.fontSize + 'px';
+          injectCSS(tab.id, `* { font-size: ${temp.fontSize}px !important; }`);
+        }
+        if (temp.textColor !== "#000000") {
+          elements.textColor.value = temp.textColor;
+          injectCSS(tab.id, `* { color: ${temp.textColor} !important; }`);
+        }
+        if (temp.textTransform) {
+          elements.textTransform.value = temp.textTransform;
+          injectCSS(tab.id, `* { text-transform: ${temp.textTransform} !important; }`);
+        }
+        
+        chrome.storage.local.remove(['tempSettings']);
+      }
+    });
+
   } catch (error) {
     showError(error.message);
     controls.classList.add('disabled');
   }
 });
+
+async function populateWebsiteSelect(currentUrl) {
+  const websiteSelect = document.getElementById('websiteSelect');
+  if (!websiteSelect) return;
+
+  const result = await chrome.storage.local.get(['websites']);
+  const websites = result.websites || {};
+
+  while (websiteSelect.options.length > 1) {
+    websiteSelect.remove(1);
+  }
+
+  Object.keys(websites).forEach(url => {
+    const option = document.createElement('option');
+    option.value = url;
+    option.textContent = url;
+    if (url === currentUrl) {
+      option.selected = true;
+    }
+    websiteSelect.appendChild(option);
+  });
+}
 
 function showError(message) {
   errorMessage.textContent = message;

@@ -24,5 +24,11 @@
         "48": "icons/2.png",
         "128": "icons/3.png"
       }
-    }
+    },
+    "web_accessible_resources": [
+      {
+        "resources": ["import_export.html", "import_export.js"],
+        "matches": ["<all_urls>"]
+      }
+    ]
 }
