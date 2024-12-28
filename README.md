@@ -12,6 +12,7 @@ Website Customizer is an extension for chromium browsers that allows you to cust
 - Save settings for individual websites
 - Reset all changes
 - CUSTOM CSS IS HERE WOWOOWOWOWOOWOWOWOWOWOWOWOWOOWOW
+- import/export site customizations (wip)
 
 ## Installationsensation
 
@@ -44,10 +45,11 @@ The extension requires the following permissions:
 
 ## Change Log
 
-### Version 1.1.0
+### Version 1.1.0 (wip)
 - New CSS feature added
 - Fixed color bug where saving made all text black even without user changes
 - Added a small note for the remove element feature
+  *version 1.1.0 has yet to be added to releases, if you want to experience the css now, clone the repo*
 
 ## Contributing
 
