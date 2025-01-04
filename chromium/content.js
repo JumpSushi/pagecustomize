@@ -1,3 +1,80 @@
+
+function initializeExtension() {
+  loadSavedRemovedElements();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeExtension, {once: true});
+} else {
+  initializeExtension();
+}
+
+function loadSavedRemovedElements() {
+  const hostname = window.location.hostname;
+  chrome.storage.local.get(['websites'], function(result) {
+    if (result.websites && result.websites[hostname]) {
+      const settings = result.websites[hostname];
+      if (settings.removedElements && Array.isArray(settings.removedElements)) {
+        window.removedElements = new Set(settings.removedElements);
+        
+        const validSelectors = settings.removedElements.filter(selector => {
+          try {
+            if (selector.match(/#:[a-z0-9]+$/)) {
+              return false; 
+            }
+            document.querySelector(selector);
+            return true;
+          } catch (e) {
+            console.warn(`Invalid selector skipped: ${selector}`);
+            return false;
+          }
+        });
+
+        validSelectors.forEach(selector => {
+          try {
+            document.querySelectorAll(selector).forEach(el => {
+              if (el.tagName === 'IFRAME') {
+                el.src = 'about:blank';
+              }
+              el.remove();
+            });
+          } catch (err) {
+            console.warn(`Failed to remove element with selector: ${selector}`, err);
+          }
+        });
+
+        if (window.removedElementObserver) {
+          window.removedElementObserver.disconnect();
+        }
+        
+        window.removedElementObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (node.nodeType === 1) { // Element node
+                validSelectors.forEach(selector => {
+                  try {
+                    if (node.matches && node.matches(selector)) {
+                      node.remove();
+                    }
+                    node.querySelectorAll && node.querySelectorAll(selector).forEach(el => el.remove());
+                  } catch (err) {
+                    // skip bloody invalid sectors 
+                  }
+                });
+              }
+            });
+          });
+        });
+
+        window.removedElementObserver.observe(document.documentElement, {
+          childList: true,
+          subtree: true
+        });
+      }
+    }
+  });
+}
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.action === 'toggleRemoval') {
     toggleRemovalMode(msg.value);
@@ -52,6 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   chrome.storage.local.get(['websites', 'tempSettings'], function(result) {
     tempSettings = result.tempSettings;
+    loadSavedRemovedElements();
+
     if (result.websites && result.websites[currentUrl]) {
       savedSettings = result.websites[currentUrl];
       
@@ -112,13 +191,12 @@ function applyStyles(element, savedSettings, tempSettings) {
       if (savedSettings.textColor) {
         element.style.color = savedSettings.textColor;
       } else {
-        element.style.removeProperty('color');
+        element.style.color = "#000000"; 
       }
     }
   }
 
   if (tempSettings) {
-    // Only apply temp font size if explicitly set and different from default
     if (tempSettings.fontSize && tempSettings.fontSize !== "16") {
       element.style.fontSize = tempSettings.fontSize + 'px';
     }
@@ -137,4 +215,27 @@ function resetPage() {
     element.removeAttribute('style');
   }
   location.reload();
+}
+
+function getUniqueSelector(element) {
+  if (element.id && !/\d{3,}/.test(element.id)) {
+    return `#${CSS.escape(element.id)}`;
+  }
+  const classes = Array.from(element.classList)
+    .filter(c => !c.includes('style-scope') && !c.includes('yt-'))
+    .map(c => `.${CSS.escape(c)}`)
+    .join('');
+    
+  if (classes) {
+    return `${element.tagName.toLowerCase()}${classes}`;
+  }
+  
+  let nth = 1;
+  let sibling = element;
+  while (sibling.previousElementSibling) {
+    nth++;
+    sibling = sibling.previousElementSibling;
+  }
+  
+  return `${element.tagName.toLowerCase()}:nth-child(${nth})`;
 }

@@ -1,6 +1,6 @@
 # Website Customizer
 
-Website Customizer is an extension for chromium browsers that allows you to customize the appearance of any website. You can change the font family, font size, text color, text capitalization, and add custom CSS. Additionally, you can remove unwanted elements from the page and import/export your settings.
+don't you just hate it when websites don't give you any way to customize your site? yee olde website customizer is a tool to help you customize your websites! it's as simple as plug and play! no code required, unless you'd like to use some custom css.
 
 ## Features (not that many, but still have some)
 
@@ -11,8 +11,8 @@ Website Customizer is an extension for chromium browsers that allows you to cust
 - Remove elements from the page
 - Save settings for individual websites
 - Reset all changes
-- CUSTOM CSS IS HERE WOWOOWOWOWOOWOWOWOWOWOWOWOWOOWOW
-- Import/Export site customizations for individual websites or all at once!
+- custom css
+- Import/Export site customizations
 
 ## Installationsensation
 
@@ -23,20 +23,7 @@ Website Customizer is an extension for chromium browsers that allows you to cust
 
 ## Usage
 
-1. Click on the Website Customizer icon in the Chrome toolbar to open the popup.
-2. Use the controls to customize the appearance of the current website:
-    - **Font Family**: Select a font from the dropdown.
-    - **Font Size**: Adjust the slider to change the font size.
-    - **Text Color**: Choose a color using the color picker.
-    - **Text Capitalization**: Select a capitalization option from the dropdown.
-    - **Custom CSS**: Add your custom CSS in the provided textarea. **Note: the css textbox is not an editor, it does not provide error messages if your indentation, syntax etc are wrong. It is recommeneded you use an editor before copy pasting into the field**
-3. To remove elements from the page, click the "Enable Element Removal" button. Click on any element on the page to remove it. Press the `ESC` key to exit removal mode, or press the button in the extension menu.
-4. Click "Save for this website" to save your customizations for the current website.
-5. Click "Delete saved settings" to remove the saved customizations for the current website.
-6. Click "Reset All Changes" to revert all customizations and reload the page.
-7. Use the "Import/Export Settings" button to:
-    - Export settings for a single website or all websites
-    - Import previously exported settings from a JSON file
+pretty self explanatory, just make sure to save your settings otherwise it won't persist!
 
 ## Permissions
 
@@ -47,6 +34,15 @@ The extension requires the following permissions:
 - `tabs`: To query and manipulate browser tabs.
 
 ## Change Log
+
+### Version 1.1.1 (I have a great naming system, thank you)
+
+- Open Dysliexic font added
+- better observer for dynamic elements 
+- remove element now persists after reload
+- fixed some websites that like to set priority and ruin my element removal
+- html iframe support 
+
 
 ### Version 1.1.0
 - Added custom CSS feature with enable/disable toggle
@@ -59,4 +55,3 @@ The extension requires the following permissions:
 - small quality of life feature: website default for the text font and text transform
 
 Github Copilot was used for debugging (including some small snippets of code), and some portions of this readme.
-

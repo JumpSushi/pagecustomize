@@ -55,7 +55,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             // Get current tab to apply CSS immediately
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
             
-            // Apply custom CSS for each website
             for (const [hostname, siteSettings] of Object.entries(settings.websites)) {
               if (siteSettings.customCSS && siteSettings.enableCustomCSS) {
                 await chrome.scripting.executeScript({
