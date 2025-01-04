@@ -1,5 +1,10 @@
-
 function initializeExtension() {
+  const fontFace = new FontFace('OpenDyslexic', 
+    `url(${chrome.runtime.getURL('fonts/OpenDyslexic-Regular.otf')})`);
+  fontFace.load().then(function(loadedFace) {
+    document.fonts.add(loadedFace);
+  });
+
   loadSavedRemovedElements();
 }
 

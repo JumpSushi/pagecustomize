@@ -28,7 +28,7 @@
     },
     "web_accessible_resources": [
       {
-        "resources": ["import_export.html", "import_export.js"],
+        "resources": ["import_export.html", "import_export.js", "fonts/OpenDyslexic-Regular.otf"],
         "matches": ["<all_urls>"]
       }
     ]
