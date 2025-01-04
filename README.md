@@ -16,7 +16,7 @@ don't you just hate it when websites don't give you any way to customize your si
 
 ## Installationsensation
 
-1. Download Here: https://github.com/JumpSushi/pagecustomize/releases/tag/V1.1.0
+1. Download Here: https://github.com/JumpSushi/pagecustomize/releases/tag/V1.1.1
 2. Open Chrome (or your chromium based browser) and navigate to `chrome://extensions/`.
 3. Enable "Developer mode" by toggling the switch in the top right corner.
 4. Click on "Load unpacked" and select the directory where you cloned the repository.
@@ -37,7 +37,7 @@ The extension requires the following permissions:
 
 ### Version 1.1.1 (I have a great naming system, thank you)
 
-- Open Dysliexic font added
+- Open Dyslexic font added
 - better observer for dynamic elements 
 - remove element now persists after reload
 - fixed some websites that like to set priority and ruin my element removal
