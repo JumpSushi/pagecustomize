@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Customizer Demo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Website Customizer</h1>
+            <p>A browser extension to customize any website's appearance</p>
+        </header>
+
+        <div class="demo-container">
+            <div class="controls-panel">
+                <div class="control-group">
+                    <label for="fontFamily">Font Family</label>
+                    <select id="fontFamily">
+                        <option value="">Website Default</option>
+                        <option value="Arial">Arial</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Verdana">Verdana</option>
+                        <option value="Comic Sans MS">Comic Sans MS</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="fontSize">Font Size</label>
+                    <input type="range" id="fontSize" min="8" max="24" value="16">
+                    <span id="fontSizeValue">16px</span>
+                </div>
+
+                <div class="control-group">
+                    <label for="textColor">Text Color</label>
+                    <input type="color" id="textColor" value="#000000">
+                </div>
+
+                <div class="control-group">
+                    <label for="textTransform">Text Capitalization</label>
+                    <select id="textTransform">
+                        <option value="">Website Default</option>
+                        <option value="uppercase">Uppercase</option>
+                        <option value="lowercase">Lowercase</option>
+                        <option value="capitalize">Capitalize</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="preview-panel">
+                <div class="demo-content" id="demoContent">
+                    <h2>SaMpLe CoNtEnT!</h2>
+                    <p>This is a demo of how the Page Customizer extension works. Try the controls on the left to customize this text!</p>
+                    <p>The actual extension allows you to customize any website's appearance, save settings per site, and even remove unwanted elements.</p>
+                    <p>You can even inject your own css into the site, customizing it to your own personal prefrence! </p>
+                    <ul>
+                        <li>Change font families</li>
+                        <li>Adjust font sizes</li>
+                        <li>Modify text colors</li>
+                        <li>Set text cApItAlIzAtIoN</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>About the Extension</h3>
+            <p>Page Customizer is a browser extension that lets you:</p>
+            <ul>
+                <li>Customize website appearance</li>
+                <li>Save settings per website</li>
+                <li>Remove unwanted elements</li>
+                <li>Add custom CSS</li>
+            </ul>
+            <p>There are some more fonts on the real extension too! Such as opendyslexic for those in need.</p>
+            <a href="https://github.com/JumpSushi/pagecustomize/releases/tag/V1.1.1" class="download-btn">Download Extension immmmejeatley</a>
+        </div>
+    </div>
+    <div class="video-section">
+        <h3>Watch the real extension in action!</h3>
+        <p class="video-description">It is highly recommended that you watch the video to see a comprehenesive tour of the real extension!</p>
+        <div class = "video-container">
+            <iframe width="560" height="315" src="https://youtu.be/1uaWYfiwRe8?si=Ejj8Hm4pHLEfwcwN" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <script src="plswork.js "></script>
+</body>
+</html>
