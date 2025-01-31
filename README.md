@@ -1,4 +1,4 @@
-# Website Customizer
+# Page Customizer
 
 don't you just hate it when websites don't give you any way to customize your site? yee olde website customizer is a tool to help you customize your websites! it's as simple as plug and play! no code required, unless you'd like to use some custom css.
 
